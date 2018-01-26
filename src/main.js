@@ -1,8 +1,13 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import Vue from 'vue'
 import App from './App'
+import 'babel-polyfill'
+import { sync } from 'vuex-router-sync'
+//import store from '@/vuex'
 import router from './router'
+
+//sync(store, router);
+Vue.prototype.axios = axios;
+//全局事件中心
+window.eventHub = new Vue();
 
 Vue.config.productionTip = false
 

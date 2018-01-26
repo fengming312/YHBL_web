@@ -42,6 +42,10 @@ module.exports = {
         include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
       },
       {
+        test: /\.less$/,
+        loader: 'less-loader',
+      },
+      {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
         options: {
@@ -66,6 +70,13 @@ module.exports = {
         }
       }
     ]
+  },
+  externals: {
+    'vue': 'Vue',
+    'vuex': 'Vuex',
+    'lodash': '_',
+    'axios': 'axios',
+    'vue-router': 'VueRouter'
   },
   node: {
     // prevent webpack from injecting useless setImmediate polyfill because Vue
