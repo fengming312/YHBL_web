@@ -1,10 +1,10 @@
 import App from './App'
 import 'babel-polyfill'
 import { sync } from 'vuex-router-sync'
-//import store from '@/vuex'
+import store from '@/vuex'
 import router from './router'
 
-//sync(store, router);
+sync(store, router);
 Vue.prototype.axios = axios;
 //全局事件中心
 window.eventHub = new Vue();
@@ -15,6 +15,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
