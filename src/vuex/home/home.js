@@ -27,11 +27,33 @@ const actions = {
     };
     request.homeApi.getCheckStatus(sendData).then(res => {
       if (res.data.message == 'success') {
+        console.log(res.data.data);
         store.commit(types.SUCCESS_GET_CHECK_STATUS, res.data.data);
       }
     })
   },
-  
+  updateActivityInfo (store, data) {
+    let sendData = {
+      ...data
+    };
+    request.homeApi.updateActivityInfo(sendData).then(res => {
+      if (res.data.message == 'success') {
+        console.log(res.data.data);
+        Message.success(res.data.data.msg);
+        eventHub.$emit('dialogHide');
+      }
+    })
+  },
+  getActivityInfo (store, data) {
+    let sendData = {
+      ...data
+    };
+    request.homeApi.getActivityInfo(sendData).then(res => {
+      if (res.data.message == 'success') {
+        console.log(res.data.data);
+      }
+    })
+  },
 };
 
 const mutations = {

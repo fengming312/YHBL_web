@@ -32,25 +32,38 @@
           </el-menu>
         </el-aside>
         <el-main>
-          <el-switch
-            @change="switchHandle"
-            v-model="value"
-            active-text="小程序审核中"
-            inactive-text="小程序运行中">
-          </el-switch>
+          <el-row>
+            <el-switch
+              @change="switchHandle"
+              v-model="value"
+              active-text="小程序审核中"
+              inactive-text="小程序运行中">
+            </el-switch>
+          </el-row>
+          <el-row>
+            <el-button type="primary" @click="showActivity" class="activity">设置活动弹窗信息</el-button>
+          </el-row>
         </el-main>
       </el-container>
     </el-container>
+    <ActivityDialog :dialogData="dialogData" v-if='dialogData.dialogVisible'></ActivityDialog>
   </div>
 </template>
 
 <script>
   import { mapGetters } from 'vuex';
+  import ActivityDialog from './modules/ActivityDialog'
 
   export default {
+    components: {
+      ActivityDialog
+    },
     data () {
       return {
-        value:false
+        value:false,
+        dialogData: {
+          dialogVisible:false
+        }
       }
     },
     computed: {
@@ -68,7 +81,11 @@
       }
     },
     mounted () {
-      this.$store.dispatch('getCheckStatus')
+      this.$store.dispatch('getCheckStatus');
+      this.$store.dispatch('getActivityInfo');
+      eventHub.$on('dialogHide', () => {
+        this.dialogData.dialogVisible = false;
+      });
     },
     methods:{
       switchHandle (e) {
@@ -77,6 +94,9 @@
         }else {
           this.$store.dispatch('postCheck',{'tagShow':'1'})
         }
+      },
+      showActivity () {
+        this.dialogData.dialogVisible = true;
       }
     }
   }
@@ -97,6 +117,9 @@
     }
     .el-container {
       height: 100%;
+    }
+    .activity {
+      margin-top: 50px;
     }
   }
 </style>
