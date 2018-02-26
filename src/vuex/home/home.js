@@ -27,7 +27,6 @@ const actions = {
     };
     request.homeApi.getCheckStatus(sendData).then(res => {
       if (res.data.message == 'success') {
-        console.log(res.data.data);
         store.commit(types.SUCCESS_GET_CHECK_STATUS, res.data.data);
       }
     })
