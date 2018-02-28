@@ -2,11 +2,13 @@ import * as types from '../types'
 import request from '@/api/request'
 import { Message } from 'element-ui'
 const state = {
-  getCheckStatus:null
+  getCheckStatus:null,
+  getUserList:null
 };
 
 const getters = {
   getCheckStatus: state => state.getCheckStatus,
+  getUserList: state => state.getUserList,
 };
 
 const actions = {
@@ -53,11 +55,24 @@ const actions = {
       }
     })
   },
+  getUserList (store, data) {
+    let sendData = {
+      ...data
+    };
+    request.homeApi.getUserList(sendData).then(res => {
+      if (res.data.message == 'success') {
+        store.commit(types.SUCCESS_GET_USERLIST, res.data.data.datas);
+      }
+    })
+  },
 };
 
 const mutations = {
   [types.SUCCESS_GET_CHECK_STATUS](store, data) {
     store.getCheckStatus = data;
+  },
+  [types.SUCCESS_GET_USERLIST](store, data) {
+    store.getUserList = data;
   },
 };
 

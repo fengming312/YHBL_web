@@ -43,6 +43,26 @@
           <el-row>
             <el-button type="primary" @click="showActivity" class="activity">设置活动弹窗信息</el-button>
           </el-row>
+          <el-table :data="getUserList" border >
+            <el-table-column prop="avatarUrl" label="头像" width="70">
+              <template slot-scope="scope">
+                <img :src="scope.row.avatarUrl" alt="" style="width: 50px;height: 50px;">
+              </template>
+            </el-table-column>
+            <el-table-column prop="nickName" label="昵称"></el-table-column>
+            <el-table-column prop="points" label="积分" width="80"></el-table-column>
+            <el-table-column prop="money" label="余额" width="80"></el-table-column>
+            <el-table-column prop="shareStatus" label="转发状态" :formatter="formatshareStatus" ></el-table-column>
+            <el-table-column prop="signStatus" label="签到状态" :formatter="formatsignStatus" ></el-table-column>
+            <el-table-column prop="createdAt" label="创建时间" :formatter="formattime" show-overflow-tooltip width="200"></el-table-column>
+            <el-table-column prop="updatedAt" label="更新时间" :formatter="formattime" show-overflow-tooltip width="200"></el-table-column>
+            <el-table-column prop="gender" label="性别" width="50" :formatter="formatgender" align="center"></el-table-column>
+            <el-table-column prop="city" label="城市"></el-table-column>
+            <el-table-column prop="province" label="省份"></el-table-column>
+            <el-table-column prop="country" label="国家"></el-table-column>
+            <el-table-column prop="language" label="语言"></el-table-column>
+            <el-table-column prop="openid" label="openid" show-overflow-tooltip></el-table-column>
+          </el-table>
         </el-main>
       </el-container>
     </el-container>
@@ -60,22 +80,23 @@
     },
     data () {
       return {
-        value:false,
+        value: false,
         dialogData: {
-          dialogVisible:false
+          dialogVisible: false
         }
       }
     },
     computed: {
       ...mapGetters([
-        'getCheckStatus'
+        'getCheckStatus',
+        'getUserList'
       ]),
     },
     watch: {
       getCheckStatus () {
         if (this.getCheckStatus.tagShow == '1') {
           this.value = false;
-        }else {
+        } else {
           this.value = true;
         }
       }
@@ -83,16 +104,51 @@
     mounted () {
       this.$store.dispatch('getCheckStatus');
       this.$store.dispatch('getActivityInfo');
+      this.$store.dispatch('getUserList');
       eventHub.$on('dialogHide', () => {
         this.dialogData.dialogVisible = false;
       });
     },
-    methods:{
+    methods: {
+      formattime (row) {
+        if (row.createdAt) {
+          return new Date(row.createdAt).toLocaleString();
+        }
+        if (row.updatedAt) {
+          return new Date(row.updatedAt).toLocaleString();
+        }
+      },
+      formatshareStatus (row) {
+        switch (row.shareStatus) {
+        case "Y":
+          return "已转发";
+        case "N":
+          return "未转发";
+        }
+      },
+      formatsignStatus (row) {
+        switch (row.signStatus) {
+        case "Y":
+          return "已签到";
+        case "N":
+          return "未签到";
+        }
+      },
+      formatgender (row) {
+        switch (row.gender) {
+        case "0":
+          return "未知";
+        case "1":
+          return "男";
+        case "2":
+          return "女";
+        }
+      },
       switchHandle (e) {
         if (e) {
-          this.$store.dispatch('postCheck',{'tagShow':'2'})
-        }else {
-          this.$store.dispatch('postCheck',{'tagShow':'1'})
+          this.$store.dispatch('postCheck', {'tagShow': '2'})
+        } else {
+          this.$store.dispatch('postCheck', {'tagShow': '1'})
         }
       },
       showActivity () {
@@ -109,7 +165,7 @@
       background-color: #015B7D;
       color: #fff;
       text-align: center;
-      line-height:80px;
+      line-height: 80px;
       font-size: 24px;
     }
     .el-aside {
