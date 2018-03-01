@@ -3,12 +3,14 @@ import request from '@/api/request'
 import { Message } from 'element-ui'
 const state = {
   getCheckStatus:null,
-  getUserList:null
+  getUserList:null,
+  getTixianInfo:null
 };
 
 const getters = {
   getCheckStatus: state => state.getCheckStatus,
   getUserList: state => state.getUserList,
+  getTixianInfo: state => state.getTixianInfo,
 };
 
 const actions = {
@@ -65,6 +67,27 @@ const actions = {
       }
     })
   },
+  getTixianInfo (store, data) {
+    let sendData = {
+      ...data
+    };
+    request.homeApi.getTixianInfo(sendData).then(res => {
+      if (res.data.message == 'success') {
+        store.commit(types.SUCCESS_GET_TIXIANINFO, res.data.data.datas);
+      }
+    })
+  },
+  tixianAudit (store, data) {
+    let sendData = {
+      ...data
+    };
+    request.homeApi.tixianAudit(sendData).then(res => {
+      if (res.data.message == 'success') {
+        Message.success(res.data.data.msg);
+        store.dispatch('getTixianInfo')
+      }
+    })
+  },
 };
 
 const mutations = {
@@ -73,6 +96,9 @@ const mutations = {
   },
   [types.SUCCESS_GET_USERLIST](store, data) {
     store.getUserList = data;
+  },
+  [types.SUCCESS_GET_TIXIANINFO](store, data) {
+    store.getTixianInfo = data;
   },
 };
 

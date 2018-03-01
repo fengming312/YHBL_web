@@ -63,6 +63,21 @@
             <el-table-column prop="language" label="语言"></el-table-column>
             <el-table-column prop="openid" label="openid" show-overflow-tooltip></el-table-column>
           </el-table>
+          <el-table :data="getTixianInfo" border >
+            <el-table-column prop="openid" label="openid"></el-table-column>
+            <el-table-column prop="name" label="姓名"></el-table-column>
+            <el-table-column prop="tel" label="电话"></el-table-column>
+            <el-table-column prop="zhifubao" label="支付宝"></el-table-column>
+            <el-table-column prop="createdAt" label="开始时间" :formatter="formattime"></el-table-column>
+            <el-table-column prop="updatedAt" label="更新时间" :formatter="formattime"></el-table-column>
+            <el-table-column prop="money" label="金额"></el-table-column>
+            <el-table-column prop="status" label="审核状态"></el-table-column>
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button type="primary" size="mini" @click="tixianAudit(scope.row.openid)" :disabled="scope.row.status == 'Y'?true:false">审核</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
         </el-main>
       </el-container>
     </el-container>
@@ -89,7 +104,8 @@
     computed: {
       ...mapGetters([
         'getCheckStatus',
-        'getUserList'
+        'getUserList',
+        'getTixianInfo'
       ]),
     },
     watch: {
@@ -105,6 +121,7 @@
       this.$store.dispatch('getCheckStatus');
       this.$store.dispatch('getActivityInfo');
       this.$store.dispatch('getUserList');
+      this.$store.dispatch('getTixianInfo');
       eventHub.$on('dialogHide', () => {
         this.dialogData.dialogVisible = false;
       });
@@ -153,6 +170,13 @@
       },
       showActivity () {
         this.dialogData.dialogVisible = true;
+      },
+      tixianAudit (data) {
+        console.log(data);
+        this.$store.dispatch('tixianAudit', {
+          'status': 'Y',
+          'openid': data
+        })
       }
     }
   }
